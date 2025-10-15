@@ -1,0 +1,37 @@
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.chat-window-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.chat-header {
+  padding: 16px;
+  background-color: #fafafa;
+  border-bottom: 1px solid #e0e0e0;
+  flex-shrink: 0;
+
+  h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+}
+
+.chat-body {
+  flex-grow: 1;
+  overflow: hidden; /* The list inside will handle scrolling */
+}
+
+.chat-footer {
+  flex-shrink: 0;
+}

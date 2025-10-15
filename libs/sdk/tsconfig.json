@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // This 'lib' REPLACES the one in the base config.
+    // We are adding "DOM.Iterable" for this specific library.
+    "lib": ["es2022", "dom", "dom.iterable"],
+
+    // Stricter rules ONLY for this library
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    { "path": "./tsconfig.lib.json" },
+    { "path": "./tsconfig.spec.json" }
+  ]
+}

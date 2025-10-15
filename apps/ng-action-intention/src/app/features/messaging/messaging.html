@@ -1,0 +1,13 @@
+<div class="messaging-container">
+  <div class="sidebar">
+    <ngc-contact-list (contactSelected)="conversation.setActiveConversation($event)" />
+  </div>
+
+  <div class="chat-area">
+    <ncu-chat-window
+      [messages]="conversation.messages()"
+      [recipientAlias]="conversation.activeRecipientAlias()"
+      (messageSent)="handleSend($event)"
+    />
+  </div>
+</div>

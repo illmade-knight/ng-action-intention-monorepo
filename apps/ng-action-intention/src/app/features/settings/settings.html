@@ -1,0 +1,44 @@
+<div class="settings-container">
+  <h1>Settings</h1>
+  <mat-divider></mat-divider>
+
+  <div class="setting-section">
+    <h2>Account</h2>
+    <p>Logged in as: <strong>{{ currentUser()?.email || 'Not logged in' }}</strong></p>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="setting-section">
+    <h2>Security Keys</h2>
+    <p>This application uses end-to-end encryption. Your private key is stored securely in this browser.</p>
+
+    @switch (keyStatus()) {
+      @case ('checking') {
+        <div class="status-checking">
+          <mat-spinner diameter="24"></mat-spinner>
+          <span>Checking for local keys...</span>
+        </div>
+      }
+      @case ('found') {
+        <div class="status-found">
+          <p class="status-text">✅ Local encryption key found.</p>
+          <button mat-stroked-button color="warn" (click)="deleteKeys()">Delete Local Keys</button>
+        </div>
+      }
+      @case ('missing') {
+        <div class="status-missing">
+          <p class="status-text">❌ No local encryption key found.</p>
+          <button mat-raised-button color="primary" (click)="createAndStoreKeys()">Generate Keys</button>
+        </div>
+      }
+    }
+  </div>
+
+  <div class="debug-panel">
+    <mat-divider></mat-divider>
+    <h3>Debug Info</h3>
+    <pre>Current Status (keyStatus): {{ keyStatus() }}</pre>
+    <pre>Raw Result from Service (keyCheckResult): {{ keyCheckResult() }}</pre>
+  </div>
+</div>

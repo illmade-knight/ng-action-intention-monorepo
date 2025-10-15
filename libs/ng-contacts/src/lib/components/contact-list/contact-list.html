@@ -1,0 +1,11 @@
+<div class="contact-list-container">
+  <h2>My Contacts</h2>
+  @for (contact of contacts(); track contact.id) {
+    <lib-contact-list-item
+      [contact]="contact"
+      (itemSelected)="selectContact(contact)"
+    />
+  } @empty {
+    <p>No contacts found.</p>
+  }
+</div>

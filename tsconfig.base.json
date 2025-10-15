@@ -4,17 +4,22 @@
     "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2015",
+    "target": "ESNext",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": ["es2022", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@ng-action-intention/source/*": ["apps/ng-action-intention/src/app/*"],
+      "@ng-action-intention/sdk": ["libs/sdk/src/index.ts"],
+      "@ng-action-intention/ng-contacts": ["libs/ng-contacts/src/index.ts"],
+      "@ng-action-intention/ng-chat-ui": ["libs/ng-chat-ui/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

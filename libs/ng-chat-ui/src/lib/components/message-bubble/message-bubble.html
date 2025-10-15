@@ -1,0 +1,5 @@
+<div class="message-bubble" [ngClass]="{ 'is-me': message.isMe }">
+  <div class="author-alias">{{ message.author.alias }}</div>
+  <div class="message-text">{{ message.text }}</div>
+  <div class="message-timestamp">{{ message.timestamp | date:'shortTime' }}</div>
+</div>

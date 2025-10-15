@@ -1,0 +1,45 @@
+:host {
+  display: flex;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.message-bubble {
+  max-width: 70%;
+  padding: 10px 15px;
+  border-radius: 18px;
+  background-color: #f0f0f0;
+  color: #333;
+
+  // The '&' creates the combined selector '.message-bubble.is-me'
+  &.is-me {
+    background-color: #007bff;
+    color: white;
+    align-self: flex-end;
+
+    .author-alias,
+    .message-timestamp {
+      color: #e0e0e0;
+    }
+  }
+}
+
+.author-alias {
+  font-size: 0.75rem;
+  font-weight: bold;
+  margin-bottom: 4px;
+  color: #555;
+}
+
+.message-text {
+  font-size: 1rem;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.message-timestamp {
+  font-size: 0.7rem;
+  text-align: right;
+  color: #999;
+  margin-top: 5px;
+}

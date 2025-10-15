@@ -1,0 +1,13 @@
+<div class="chat-window-container">
+  <header class="chat-header">
+    <h3>{{ recipientAlias }}</h3>
+  </header>
+
+  <main class="chat-body">
+    <lib-message-list [messages]="messages" />
+  </main>
+
+  <footer class="chat-footer">
+    <lib-message-input (messageSent)="handleMessageSent($event)" />
+  </footer>
+</div>

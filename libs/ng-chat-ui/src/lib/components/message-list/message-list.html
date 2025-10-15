@@ -1,0 +1,5 @@
+<div class="message-list-container">
+  @for (message of messages; track message.id) {
+    <lib-message-bubble [message]="message" />
+  }
+</div>

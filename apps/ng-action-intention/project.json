@@ -1,0 +1,101 @@
+{
+  "name": "ng-action-intention",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/ng-action-intention/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/ng-action-intention",
+        "index": "apps/ng-action-intention/src/index.html",
+        "browser": "apps/ng-action-intention/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/ng-action-intention/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          "apps/ng-action-intention/src/favicon.ico",
+          "apps/ng-action-intention/src/assets"
+        ],
+        "styles": ["apps/ng-action-intention/src/styles.scss"]
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all",
+          "fileReplacements": [
+            {
+              "replace": "apps/ng-action-intention/src/app/config/environment.ts",
+              "with": "apps/ng-action-intention/src/app/config/environment.prod.ts"
+            }
+          ]
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "fileReplacements": [
+            {
+              "replace": "apps/ng-action-intention/src/app/config/environment.ts",
+              "with": "apps/ng-action-intention/src/app/config/environment.dev.ts"
+            }
+          ]
+        },
+        "mock": {
+          "fileReplacements": [
+            {
+              "replace": "apps/ng-action-intention/src/app/config/environment.ts",
+              "with": "apps/ng-action-intention/src/app/config/environment.mock.ts"
+            }
+          ]
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "ng-action-intention:build:production"
+        },
+        "development": {
+          "buildTarget": "ng-action-intention:build:development"
+        },
+        "mock": {
+          "buildTarget": "ng-action-intention:build:mock"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular/build:extract-i18n",
+      "options": {
+        "buildTarget": "ng-action-intention:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../coverage/apps/ng-action-intention"
+      }
+    }
+  }
+}
