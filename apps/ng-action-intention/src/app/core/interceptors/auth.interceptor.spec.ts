@@ -1,10 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { provideHttpClient, HttpRequest, withInterceptors, HttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, HttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { authInterceptor } from './auth.interceptor';
 import { Auth } from '@ng-action-intention/source/core/services/auth/auth';
 import { environment } from '@ng-action-intention/source/config/environment';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 describe('authInterceptor', () => {
   let httpMock: HttpTestingController;

@@ -1,6 +1,6 @@
 // src/app/config/environment.development.ts
 
-import {Environment} from './enviroment.model';
+import {Environment} from './environment.model';
 
 export const environment: Environment = {
   production: false,

@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Auth } from './auth';
 import { environment } from '../../../config/environment';
 import { firstValueFrom } from 'rxjs';

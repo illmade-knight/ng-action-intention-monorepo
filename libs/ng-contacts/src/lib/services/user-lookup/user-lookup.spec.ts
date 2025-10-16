@@ -4,7 +4,6 @@ import {
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { UserLookup } from './user-lookup';
 import { NG_CONTACTS_CONFIG } from '../../config';
 import { AddressBookContact } from '../../models/address-book-contact.model';

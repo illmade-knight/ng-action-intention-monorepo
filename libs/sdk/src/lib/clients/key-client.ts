@@ -3,12 +3,12 @@
  * communicate with the backend microservices (key-service and routing-service).
  * These contracts decouple the core application logic from the network layer.
  */
-import type {SecureEnvelope, URN} from "@illmade-knight/action-intention-protos";
+import type {URN} from "@illmade-knight/action-intention-protos";
 
 /**
  * Defines the contract for a client that communicates with the go-key-service.
  */
-export interface Clients {
+export interface KeyClient {
     /**
      * Fetches a user's public key.
      * @param userId The URN of the user.

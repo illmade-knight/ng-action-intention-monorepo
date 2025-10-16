@@ -4,9 +4,6 @@
  * exists. The tests cover key generation, hybrid encryption/decryption, and
  * digital signing/verification.
  */
-
-// Import testing functions from Vitest
-import { describe, test, expect, beforeEach } from 'vitest';
 import { Crypto } from './crypto';
 
 describe('Crypto', () => {

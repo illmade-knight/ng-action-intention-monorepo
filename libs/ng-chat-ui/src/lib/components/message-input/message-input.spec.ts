@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MessageInput } from './message-input';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 describe('MessageInput', () => {

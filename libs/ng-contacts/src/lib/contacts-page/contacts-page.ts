@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+import {ContactList} from "../components/contact-list/contact-list";
 
 @Component({
   selector: 'ngc-contacts-page',
-  imports: [],
+  imports: [
+    ContactList
+  ],
   templateUrl: './contacts-page.html',
   styleUrls: ['./contacts-page.scss'],
 })

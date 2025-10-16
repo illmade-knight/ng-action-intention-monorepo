@@ -1,28 +1,26 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing'; // 👈 REMOVED fakeAsync and tick
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { Settings } from './settings';
 import { Client } from '../../core/services/client/client';
 import { Auth } from '../../core/services/auth/auth';
 import { signal, WritableSignal } from '@angular/core';
-import { URN } from '@illmade-knight/action-intention-protos';
 import { UserProfile } from '../../core/models/user';
-import { vi } from 'vitest';
 
 // --- Mocks ---
-const mockUser: UserProfile = { id: URN.create('user', 'test-user'), alias: 'Test User' };
-
-// Mock the Client service (which uses HttpClient)
-const mockClient = {
-  checkForLocalKeys: vi.fn().mockResolvedValue(true),
-  getOrCreateKeys: vi.fn().mockResolvedValue(undefined),
-  deleteLocalKeys: vi.fn().mockResolvedValue(undefined),
+const mockUser: UserProfile = {
+  id: 'urn:sm:user:test',
+  email: 'test@user.com', // 👈 Added email to match other mocks
+  alias: 'Test User',
 };
-
-// Mock the Auth service
+const mockClient = {
+  checkForLocalKeys: vi.fn().mockImplementation(() => Promise.resolve(true)),
+  getOrCreateKeys: vi.fn().mockImplementation(() => Promise.resolve(undefined)),
+  deleteLocalKeys: vi.fn().mockImplementation(() => Promise.resolve(undefined)),
+};
 let currentUserSignal: WritableSignal<UserProfile | null>;
 const mockAuth = {
-  currentUser: () => currentUserSignal.asReadonly(),
+  currentUser: signal(null as UserProfile | null).asReadonly(),
 };
 
 describe('Settings', () => {
@@ -30,13 +28,12 @@ describe('Settings', () => {
   let fixture: ComponentFixture<Settings>;
 
   beforeEach(async () => {
-    // Initialize the mutable signal before each test
     currentUserSignal = signal(mockUser);
+    mockAuth.currentUser = currentUserSignal.asReadonly();
 
     await TestBed.configureTestingModule({
       imports: [Settings],
       providers: [
-        // FIX: Provide both base and testing clients to satisfy root-provided dependencies
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: Client, useValue: mockClient },
@@ -44,16 +41,20 @@ describe('Settings', () => {
       ],
     }).compileComponents();
 
-    // Re-set mock implementation to isolate tests
     vi.clearAllMocks();
-    mockClient.checkForLocalKeys.mockResolvedValue(true);
+    mockClient.checkForLocalKeys.mockImplementation(() => Promise.resolve(true));
+    mockClient.getOrCreateKeys.mockImplementation(() => Promise.resolve(undefined));
+    mockClient.deleteLocalKeys.mockImplementation(() => Promise.resolve(undefined));
 
     fixture = TestBed.createComponent(Settings);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    // fixture.detectChanges() is removed from here
   });
 
-  // afterEach(() => { httpTestingController.verify(); }); // Removed since Client is mocked
+  // 🔽 ADDED: Clean up TestBed to prevent pollution 🔽
+  afterEach(() => {
+    TestBed.resetTestingModule();
+  });
 
   it('should create and initialize keyStatus to "checking"', () => {
     expect(component).toBeTruthy();
@@ -61,75 +62,82 @@ describe('Settings', () => {
   });
 
   describe('Key Status Initialization', () => {
-    it('should set keyStatus to "found" if keys exist for the current user', fakeAsync(() => {
-      // Setup mock before component initialization (done in beforeEach)
-      mockClient.checkForLocalKeys.mockResolvedValue(true);
+    // 🔽 CHANGED: Removed 'fakeAsync', added 'async' 🔽
+    it('should set keyStatus to "found" if keys exist for the current user', async () => {
+      mockClient.checkForLocalKeys.mockImplementation(() => Promise.resolve(true));
 
-      // Trigger ngOnInit logic (which is async)
-      component.checkKeyStatus();
-      tick(); // Resolve async call
+      fixture.detectChanges(); // Trigger ngOnInit
+      await Promise.resolve(); // 👈 CHANGED: Replaced tick()
 
       expect(mockClient.checkForLocalKeys).toHaveBeenCalledWith(mockUser.id);
       expect(component.keyStatus()).toBe('found');
-    }));
+    });
 
-    it('should set keyStatus to "missing" if keys do not exist', fakeAsync(() => {
-      mockClient.checkForLocalKeys.mockResolvedValue(false);
+    // 🔽 CHANGED: Removed 'fakeAsync', added 'async' 🔽
+    it('should set keyStatus to "missing" if keys do not exist', async () => {
+      mockClient.checkForLocalKeys.mockImplementation(() => Promise.resolve(false));
 
-      component.checkKeyStatus();
-      tick();
+      fixture.detectChanges(); // Trigger ngOnInit
+      await Promise.resolve(); // 👈 CHANGED: Replaced tick()
 
+      expect(mockClient.checkForLocalKeys).toHaveBeenCalledWith(mockUser.id);
       expect(component.keyStatus()).toBe('missing');
-    }));
+    });
 
-    it('should set keyStatus to "missing" if no user is logged in', fakeAsync(() => {
+    // 🔽 CHANGED: Removed 'fakeAsync', added 'async' 🔽
+    it('should set keyStatus to "missing" if no user is logged in', async () => {
       currentUserSignal.set(null);
-      fixture.detectChanges(); // Update component with new user status
 
-      component.checkKeyStatus();
-      tick();
+      fixture.detectChanges(); // Trigger ngOnInit
+      await Promise.resolve(); // 👈 CHANGED: Replaced tick()
 
       expect(mockClient.checkForLocalKeys).not.toHaveBeenCalled();
       expect(component.keyStatus()).toBe('missing');
-    }));
+    });
   });
 
   describe('Key Management', () => {
-    beforeEach(() => {
-      // Reset status to a known state before key management tests
-      component.keyStatus.set('missing');
-      fixture.detectChanges();
+    // 🔽 CHANGED: Removed 'fakeAsync', added 'async' 🔽
+    beforeEach(async () => {
+      mockClient.checkForLocalKeys.mockImplementation(() => Promise.resolve(false));
+      fixture.detectChanges(); // Run ngOnInit
+      await Promise.resolve(); // 👈 CHANGED: Replaced tick()
+      expect(component.keyStatus()).toBe('missing');
     });
 
-    it('should call getOrCreateKeys and set status to "found" on success', fakeAsync(() => {
-      component.createAndStoreKeys();
-      tick();
+    // 🔽 CHANGED: Removed 'fakeAsync', added 'async' 🔽
+    it('should call getOrCreateKeys and set status to "found" on success', async () => {
+      await component.createAndStoreKeys(); // 👈 Added 'await'
+      await Promise.resolve(); // 👈 CHANGED: Replaced tick()
 
       expect(mockClient.getOrCreateKeys).toHaveBeenCalledWith(mockUser.id);
       expect(component.keyStatus()).toBe('found');
-    }));
+    });
 
-    it('should delete keys and set status to "missing" after confirmation', fakeAsync(() => {
-      // Mock the browser confirm dialog
+    // 🔽 CHANGED: Removed 'fakeAsync', added 'async' 🔽
+    it('should delete keys and set status to "missing" after confirmation', async () => {
+      component.keyStatus.set('found');
       vi.spyOn(window, 'confirm').mockReturnValue(true);
 
-      component.deleteKeys();
-      tick();
+      await component.deleteKeys(); // 👈 Added 'await'
+      await Promise.resolve(); // 👈 CHANGED: Replaced tick()
 
       expect(mockClient.deleteLocalKeys).toHaveBeenCalledWith(mockUser.id);
       expect(component.keyStatus()).toBe('missing');
       vi.spyOn(window, 'confirm').mockRestore();
-    }));
+    });
 
-    it('should not delete keys if confirmation is denied', fakeAsync(() => {
+    // 🔽 CHANGED: Removed 'fakeAsync', added 'async' 🔽
+    it('should not delete keys if confirmation is denied', async () => {
+      component.keyStatus.set('found');
       vi.spyOn(window, 'confirm').mockReturnValue(false);
 
-      component.deleteKeys();
-      tick();
+      await component.deleteKeys(); // 👈 Added 'await'
+      await Promise.resolve(); // 👈 CHANGED: Replaced tick()
 
       expect(mockClient.deleteLocalKeys).not.toHaveBeenCalled();
-      expect(component.keyStatus()).toBe('missing'); // Status remains unchanged but is 'missing' in this setup
+      expect(component.keyStatus()).toBe('found');
       vi.spyOn(window, 'confirm').mockRestore();
-    }));
+    });
   });
 });

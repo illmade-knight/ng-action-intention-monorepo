@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Input, ViewChild } from '@angular/core';
 import { ChatWindow } from './chat-window';
 import { ChatMessage } from '../models/chat-message.model';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 // --- Test Host Component ---

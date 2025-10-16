@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Input } from '@angular/core';
 import { MessageBubble } from './message-bubble';
 import { ChatMessage } from '../../models/chat-message.model';
-import { describe, it, expect, beforeEach } from 'vitest';
 
 // 1. Create a simple parent component for the test
 @Component({

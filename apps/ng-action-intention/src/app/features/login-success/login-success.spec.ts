@@ -1,69 +1,91 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { LoginSuccess } from './login-success';
 import { Auth } from '../../core/services/auth/auth';
-import { describe, it, expect, vi } from 'vitest';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { signal, Signal } from '@angular/core';
 
-// Define a more specific type for the mockRouter to avoid type errors
+// Define types at the top
 type MockRouter = { navigate: ReturnType<typeof vi.fn> };
+
 type MockAuth = {
   checkAuthStatus: ReturnType<typeof vi.fn>;
-  isAuthenticated: () => Signal<boolean>;
+  isAuthenticated: Signal<boolean>; // It's a property that is a Signal
 };
 
 describe('LoginSuccess', () => {
   let fixture: ComponentFixture<LoginSuccess>;
   let mockRouter: MockRouter;
-  let mockAuth: MockAuth;
 
-  // A setup function to configure the TestBed for each scenario (MUST remain async)
-  const setup = async (isAuthenticated: boolean) => {
-    const isAuthenticatedSignal = signal(isAuthenticated);
-    mockAuth = {
-      checkAuthStatus: vi.fn().mockResolvedValue(undefined),
-      isAuthenticated: () => isAuthenticatedSignal.asReadonly(),
-    };
+  beforeEach(async () => {
+    // 1. Configure the TestBed ONCE with dummy providers
     mockRouter = { navigate: vi.fn() };
 
-    // This block is what creates the promise that must be resolved with tick()
     await TestBed.configureTestingModule({
       imports: [LoginSuccess],
       providers: [
-        { provide: Auth, useValue: mockAuth },
+        // Provide a minimal dummy for the 'Auth' service
+        { provide: Auth, useValue: { isAuthenticated: signal(false) } },
         { provide: Router, useValue: mockRouter },
         provideAnimationsAsync('noop'),
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(LoginSuccess);
+    // 2. Use Vitest fake timers
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    // 3. Clean up timers and TestBed
+    vi.useRealTimers();
+    TestBed.resetTestingModule();
+  });
+
+  /**
+   * Helper function to create a fixture with a specific auth state.
+   */
+  const setupFixtureWithAuth = (isAuthenticated: boolean) => {
+    const mockAuth: MockAuth = {
+      // Mock 'isAuthenticated' as a property
+      isAuthenticated: signal(isAuthenticated).asReadonly(),
+      checkAuthStatus: vi.fn().mockImplementation(() => Promise.resolve(undefined)),
+    };
+
+    // Override the provider *before* creating the component
+    TestBed.overrideProvider(Auth, { useValue: mockAuth });
+
+    return TestBed.createComponent(LoginSuccess);
   };
 
-  // FIX: Remove 'async' from the inner function, call setup directly, and use tick()
-  it('should navigate to /messaging on successful authentication', fakeAsync(() => {
-    // 1. Call the async setup function to create the setup promise.
-    setup(true);
+  // 🔽 TEST CASE 1 (THE ONE THAT WAS FAILING) 🔽
+  it('should navigate to /login on failed authentication', () => {
+    // 1. Setup fixture with auth=false
+    fixture = setupFixtureWithAuth(false);
 
-    // 2. Resolve ALL promises/microtasks created by the setup function.
-    tick();
-
-    // 3. Run the synchronous test logic
+    // 2. Run ngOnInit (will now correctly read 'false')
     fixture.detectChanges();
 
-    // 4. Advance time past the 50ms timeout for the redirect
-    tick(100);
+    // 3. Advance timer
+    vi.advanceTimersByTime(3000);
+
+    // 4. Assert
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      queryParams: { error: 'auth_sync_failed' },
+    });
+  });
+
+  // 🔽 TEST CASE 2 (ADDED BACK IN) 🔽
+  it('should navigate to /messaging on successful authentication', () => {
+    // 1. Setup fixture with auth=true
+    fixture = setupFixtureWithAuth(true);
+
+    // 2. Run ngOnInit (will now correctly read 'true')
+    fixture.detectChanges();
+
+    // 3. Advance timer
+    vi.advanceTimersByTime(100);
+
+    // 4. Assert
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/messaging']);
-  }));
-
-  // FIX: Apply the same structure here.
-  it('should navigate to /login on failed authentication', fakeAsync(() => {
-    setup(false);
-    tick();
-
-    fixture.detectChanges();
-
-    tick(3000);
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], { queryParams: { error: 'auth_sync_failed' } });
-  }));
+  });
 });

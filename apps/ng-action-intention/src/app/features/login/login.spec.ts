@@ -1,15 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { signal } from '@angular/core';
+import {signal, WritableSignal} from '@angular/core';
 import { of } from 'rxjs';
 import { Login } from './login';
 import { Auth } from '@ng-action-intention/source/core/services/auth/auth';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 describe('Login', () => {
   let fixture: ComponentFixture<Login>;
   const isAuthenticatedSignal = signal(false);
-  const currentUserSignal = signal(null);
+  const currentUserSignal: WritableSignal<any> = signal(null);
 
   const mockAuth = {
     isAuthenticated: isAuthenticatedSignal.asReadonly(),
@@ -39,7 +38,7 @@ describe('Login', () => {
 
   it('should show welcome message and logout button when authenticated', () => {
     isAuthenticatedSignal.set(true);
-    currentUserSignal.set({ alias: 'Test User' });
+    currentUserSignal.set({id: "1", alias: "Test User", email: "test@user.com"});
     fixture.detectChanges();
     const welcomeMessage = fixture.nativeElement.querySelector('h2');
     const logoutButton = fixture.nativeElement.querySelector('button');

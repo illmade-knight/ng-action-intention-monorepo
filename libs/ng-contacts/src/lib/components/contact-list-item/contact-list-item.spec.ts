@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, it, expect, beforeEach } from 'vitest';
 import { ContactListItem } from './contact-list-item';
 import { AddressBookContact } from '../../models/address-book-contact.model';
 
