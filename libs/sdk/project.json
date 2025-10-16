@@ -10,16 +10,15 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/sdk",
-        "main": "libs/sdk/src/index.ts",
-        "tsConfig": "libs/sdk/tsconfig.lib.json",
-        "assets": []
+        "configFile": "libs/sdk/vite.config.mts"
       }
     },
     "test": {
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../coverage/libs/sdk"
+        "reportsDirectory": "../../coverage/libs/sdk",
+        "configFile": "libs/sdk/vitest.config.mts"
       }
     },
     "lint": {

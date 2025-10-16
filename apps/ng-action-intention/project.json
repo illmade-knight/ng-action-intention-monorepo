@@ -16,6 +16,7 @@
         "polyfills": ["zone.js"],
         "tsConfig": "apps/ng-action-intention/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
+        "statsJson": true,
         "assets": [
           "apps/ng-action-intention/src/favicon.ico",
           "apps/ng-action-intention/src/assets"
@@ -92,9 +93,12 @@
     },
     "test": {
       "executor": "@nx/vite:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": [
+        "{options.reportsDirectory}"
+      ],
       "options": {
-        "reportsDirectory": "../../coverage/apps/ng-action-intention"
+        "reportsDirectory": "../../coverage/apps/ng-action-intention",
+        "configFile": "apps/ng-action-intention/vitest.config.mts"
       }
     }
   }

@@ -1,9 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ContactsPage } from './contacts-page';
-// --- 1. Import the missing component ---
 import { ContactList } from '../components/contact-list/contact-list';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+// --- 1. Import the injection token ---
+import { NG_CONTACTS_CONFIG } from '../config';
+
 
 describe('ContactsPage', () => {
   let component: ContactsPage;
@@ -11,9 +13,19 @@ describe('ContactsPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      // --- 2. Add it to the imports array ---
       imports: [ContactsPage, ContactList],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        // --- 2. Add the provider with a mock value ---
+        {
+          provide: NG_CONTACTS_CONFIG,
+          useValue: {
+            identityServiceUrl: 'mock-identity-url',
+            messagingServiceUrl: 'mock-messaging-url',
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ContactsPage);

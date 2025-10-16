@@ -11,14 +11,16 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/libs/ng-contacts"
+        "outputPath": "dist/libs/ng-contacts",
+        "configFile": "libs/ng-contacts/vite.config.mts"
       }
     },
     "test": {
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../coverage/libs/ng-contacts"
+        "reportsDirectory": "../../coverage/libs/ng-contacts",
+        "configFile": "libs/ng-contacts/vitest.config.mts"
       }
     },
     "lint": {

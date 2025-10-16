@@ -11,14 +11,16 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/libs/ng-chat-ui"
+        "outputPath": "dist/libs/ng-chat-ui",
+        "configFile": "libs/ng-chat-ui/vite.config.mts"
       }
     },
     "test": {
       "executor": "@nx/vite:test",
       "outputs": ["{options.reportsDirectory}"],
       "options": {
-        "reportsDirectory": "../../coverage/libs/ng-chat-ui"
+        "reportsDirectory": "../../coverage/libs/ng-chat-ui",
+        "configFile": "libs/ng-chat-ui/vitest.config.mts"
       }
     },
     "lint": {

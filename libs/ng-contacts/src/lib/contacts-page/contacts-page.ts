@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {ContactList} from "../components/contact-list/contact-list";
+import { ContactList } from "../components/contact-list/contact-list";
 
 @Component({
   selector: 'ngc-contacts-page',
